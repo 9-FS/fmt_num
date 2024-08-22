@@ -1,6 +1,10 @@
 [package]
+authors     = ["9-FS <pray4spam@googlemail.com>"]
+categories  = ["value-formatting"]
 description = "A convenient formatter to scale, round, and display numbers."
 edition     = "2021"
+exclude     = [".github/", "readme.pdf"]                                     # additional to .gitignore
+keywords    = ["format", "numbers"]
 license     = "MIT"
 name        = "scaler"
 readme      = "readme.typ"
