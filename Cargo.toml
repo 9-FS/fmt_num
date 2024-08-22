@@ -1,0 +1,11 @@
+[package]
+description = "A convenient formatter to scale, round, and display numbers."
+edition     = "2021"
+license     = "MIT"
+name        = "scaler"
+readme      = "readme.pdf"
+repository  = "https://github.com/9-FS/scaler"
+version     = "1.0.0"
+
+[dependencies]
+log = "^0.4.0"

@@ -1,0 +1,12 @@
+*.exe
+*.log
+*.token
+
+config/
+doc_templates/
+log/
+target/
+
+.env
+docker-image.tar
+rustfmt.toml
