@@ -39,16 +39,16 @@ Scaling describes the usage of #link("https://en.wikipedia.org/wiki/Metric_prefi
 ```Rust
 let f: scaler::Formatter = scaler::Formatter::new()
     .set_rounding(scaler::Rounding::SignificantDigits(2)); // general display
-assert_eq!(f.format(&123), "120");
-assert_eq!(f.format(&4.56), "4,6");
+assert_eq!(f.format(123), "120");
+assert_eq!(f.format(4.56), "4,6");
 ```
 
 == Example
 
 ```Rust
 let f: scaler::Formatter = scaler::Formatter::new(); // calculation results
-assert_eq!(f.format(&456789), "456,8 k");
-assert_eq!(f.format(&0.1), "100,0 m");
+assert_eq!(f.format(456789), "456,8 k");
+assert_eq!(f.format(0.1), "100,0 m");
 ```
 
 == Example
@@ -57,9 +57,9 @@ assert_eq!(f.format(&0.1), "100,0 m");
 let f: scaler::Formatter = scaler::Formatter::new()
     .set_scaling(scaler::Scaling::None)
     .set_rounding(scaler::Rounding::Magnitude(0)); // absolute values
-assert_eq!(f.format(&0.1), "0");
-assert_eq!(f.format(&1), "1");
-assert_eq!(f.format(&1000), "1.000");
+assert_eq!(f.format(0.1), "0");
+assert_eq!(f.format(1), "1");
+assert_eq!(f.format(1000), "1.000");
 ```
 
 == Example
@@ -67,7 +67,7 @@ assert_eq!(f.format(&1000), "1.000");
 ```Rust
 let f: scaler::Formatter = scaler::Formatter::new()
     .set_scaling(scaler::Scaling::Binary(true)); // data sizes
-assert_eq!(f.format(&0.1), "1,600 * 2^(-4)");
-assert_eq!(f.format(&1023), "1.023");
-assert_eq!(f.format(&1024), "1,000 Ki");
+assert_eq!(f.format(0.1), "1,600 * 2^(-4)");
+assert_eq!(f.format(1023), "1.023");
+assert_eq!(f.format(1024), "1,000 Ki");
 ```
