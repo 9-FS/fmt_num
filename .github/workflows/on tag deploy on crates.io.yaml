@@ -1,0 +1,63 @@
+name: "On Tag Deploy on crates.io"
+env:
+    REPO_NAME: "scaler"
+    RUN_TESTS: true
+    RUST_VERSION: "1.80"
+on:
+    push:
+        tags:
+            # -   "[0-9]+.[0-9]+.[0-9]+"
+            -   "*" # execute every time tag is pushed
+
+jobs:
+    test:
+        name: "Run Tests"
+        env:
+            working-directory: ${{github.workspace}}
+        runs-on: "ubuntu-latest"
+
+        steps:
+            -   name: "Checkout Repository"
+                uses: "actions/checkout@v4" # makes repository structure available
+
+            -   name: "Install Rust"
+                uses: "actions-rust-lang/setup-rust-toolchain@v1"
+                with:
+                    toolchain: ${{env.RUST_VERSION}}
+
+            -   name: "Check Project Version and Tag Match"
+                run: |
+                    project_version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+                    tag=${GITHUB_REF#refs/tags/*}
+                    if [ "$project_version" == "$tag" ]; then
+                        exit 0
+                    else
+                        exit 1
+                    fi
+
+            -   name: "Run Tests"
+                if: ${{env.RUN_TESTS == 'true'}}
+                run: "cargo test"
+
+
+    deploy:
+        name: "Deploy Distributables on crates.io"
+        env:
+            working-directory: ${{github.workspace}}
+        needs: ["test"]
+        runs-on: "ubuntu-latest"
+
+        steps:
+            -   name: "Checkout Repository"
+                uses: "actions/checkout@v4" # makes repository structure available
+
+            -   name: "Install Rust"
+                uses: "actions-rust-lang/setup-rust-toolchain@v1"
+                with:
+                    toolchain: ${{env.RUST_VERSION}}
+
+            -   name: "Login to crates.io"
+                run: "cargo login ${{secrets.CRATES_IO_TOKEN}}"
+
+            -   name: "Publish to crates.io"
+                run: "cargo publish"
