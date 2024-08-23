@@ -9,7 +9,7 @@ license     = "MIT"
 name        = "scaler"
 readme      = "readme.typ"
 repository  = "https://github.com/9-FS/scaler"
-version     = "1.0.0"
+version     = "1.0.1"
 
 [dependencies]
 log = "^0.4.0"

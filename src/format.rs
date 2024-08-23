@@ -40,14 +40,18 @@ impl Formatter
     /// ## Sign
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new().set_sign(scaler::Sign::OnlyMinus);
+    /// assert_eq!(f.format(std::f64::NEG_INFINITY), "-∞");
     /// assert_eq!(f.format(-1), "-1,000");
     /// assert_eq!(f.format(0), "0,000");
     /// assert_eq!(f.format(1), "1,000");
+    /// assert_eq!(f.format(std::f64::INFINITY), "∞");
     ///
     /// let f: scaler::Formatter = scaler::Formatter::new().set_sign(scaler::Sign::Always);
+    /// assert_eq!(f.format(std::f64::NEG_INFINITY), "-∞");
     /// assert_eq!(f.format(-1), "-1,000");
     /// assert_eq!(f.format(0), "+0,000");
     /// assert_eq!(f.format(1), "+1,000");
+    /// assert_eq!(f.format(std::f64::INFINITY), "+∞");
     /// ```
     ///
     /// ## Scaling
@@ -181,11 +185,18 @@ impl Formatter
         if x.is_infinite() && x.is_sign_positive()
         // edge cases
         {
-            return "∞".to_string(); // positive infinity
+            s = "∞".to_string(); // positive infinity
+            if self.sign == Sign::Always
+            // if always sign
+            {
+                s = format!("+{s}"); // manually add plus sign
+            }
+            return s;
         }
         else if x.is_infinite() && x.is_sign_negative()
         {
-            return "-∞".to_string(); // negative infinity
+            s = "-∞".to_string(); // negative infinity
+            return s;
         }
         else if x.is_nan()
         {
