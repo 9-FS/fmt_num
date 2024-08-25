@@ -6,7 +6,7 @@ This crate provides a convenient `Formatter` to scale, round, and display number
 Scaling describes the usage of [decimal]("https://en.wikipedia.org/wiki/Metric_prefix") or [binary unit prefixes]("https://en.wikipedia.org/wiki/Binary_prefix") to increase readability; though no scaling and scientific notation are also supported.\
 Rounding can be done either to a specified magnitude or to a number of significant digits.\
 Separators can be freely adjusted. The group separator separates groups of digits every 3 digits before the decimal separator, while the decimal separator separates the integer and fractional parts of a number.\
-The sign behaviour can be set to always show the sign, only show the sign when the number is negative, or never show the sign.
+The sign behaviour can be set to always show the sign or only show the sign when the number is negative.
 
 ## Usage
 
@@ -97,7 +97,7 @@ The sign behaviour can be set to always show the sign, only show the sign when t
 ### `Scaling`
 
 - `Binary`:
-    - Scales by factor $2^(10) = 1.024$.
+    - Scales by factor $2^(10) = 1024$.
     - If no prefix for that magnitude defined: Fallback to scientific notation.
     - Contains whether or not to put space between number and unit prefix.
 
@@ -126,7 +126,7 @@ The sign behaviour can be set to always show the sign, only show the sign when t
     ```
 
 - `Decimal`:
-    - Scales by factor $10^(3) = 1.000$.
+    - Scales by factor $10^(3) = 1000$.
     - If no prefix for that magnitude defined: Fallback to scientific notation.
     - Contains whether or not to put space between number and unit prefix.
 

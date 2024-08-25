@@ -128,11 +128,11 @@ impl Formatter
     /// # Arguments
     /// - `scaling`: new scaling mode
     ///     - `Binary`
-    ///         - Scales by factor 2^(10) = 1.024.
+    ///         - Scales by factor 2^(10) = 1024.
     ///         - If no prefix for that magnitude defined: Fallback to scientific notation.
     ///         - Contains whether or not to put space between number and unit prefix.
     ///     - `Decimal`
-    ///         - Scales by factor 10^(3) = 1.000.
+    ///         - Scales by factor 10^(3) = 1000.
     ///         - If no prefix for that magnitude defined: Fallback to scientific notation.
     ///         - Contains whether or not to put space between number and unit prefix.
     ///     - `None`
