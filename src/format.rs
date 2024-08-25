@@ -21,26 +21,39 @@ impl Formatter
     /// assert_eq!(f.format(123.456), "123,5");
     /// assert_eq!(f.format(0.789), "789,0 m");
     /// assert_eq!(f.format(42069), "42,07 k");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///     .set_rounding(scaler::Rounding::SignificantDigits(3)); // general display
     /// assert_eq!(f.format(123.456), "123");
     /// assert_eq!(f.format(0.789), "789 m");
     /// assert_eq!(f.format(42069), "42,1 k");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
-    ///     .set_rounding(scaler::Rounding::Magnitude(0))
-    ///     .set_scaling(scaler::Scaling::None); // absolute values
+    ///     .set_scaling(scaler::Scaling::None)
+    ///     .set_rounding(scaler::Rounding::Magnitude(0)); // absolute values
     /// assert_eq!(f.format(123.456), "123");
     /// assert_eq!(f.format(0.789), "1");
     /// assert_eq!(f.format(42069), "42.069");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
-    ///     .set_rounding(scaler::Rounding::SignificantDigits(3))
-    ///     .set_scaling(scaler::Scaling::Binary(true)); // data sizes
+    ///     .set_scaling(scaler::Scaling::Binary(true))
+    ///     .set_rounding(scaler::Rounding::SignificantDigits(3)); // data sizes
     /// assert_eq!(f.format(123.456), "123");
     /// assert_eq!(f.format(0.789), "1,58 * 2^(-1)");
     /// assert_eq!(f.format(42069), "41,1 Ki");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new(); // edge cases
+    /// assert_eq!(f.format(f64::NEG_INFINITY), "-∞");
+    /// assert_eq!(f.format(f64::INFINITY), "∞");
+    /// assert_eq!(f.format(f64::NAN), "NaN");
     /// ```
     pub fn format<T>(&self, x: T) -> String
     where

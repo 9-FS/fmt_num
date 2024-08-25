@@ -55,7 +55,11 @@ impl Formatter
     /// - modified self
     ///
     /// # Examples
+    ///
+    /// Examples have scaling disabled for easier understanding.
+    ///
     /// ## Magnitude
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///     .set_scaling(scaler::Scaling::None)
@@ -63,28 +67,36 @@ impl Formatter
     /// assert_eq!(f.format(123.456), "123,46");
     /// assert_eq!(f.format(0.789), "0,79");
     /// assert_eq!(f.format(42069), "42.069,00");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///     .set_scaling(scaler::Scaling::None)
     ///     .set_rounding(scaler::Rounding::Magnitude(-1));
     /// assert_eq!(f.format(123.456), "123,5");
     /// assert_eq!(f.format(0.789), "0,8");
     /// assert_eq!(f.format(42069), "42.069,0");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_rounding(scaler::Rounding::Magnitude(0));
     /// assert_eq!(f.format(123.456), "123");
     /// assert_eq!(f.format(0.789), "1");
     /// assert_eq!(f.format(42069), "42.069");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_rounding(scaler::Rounding::Magnitude(1));
     /// assert_eq!(f.format(123.456), "120");
     /// assert_eq!(f.format(0.789), "0");
     /// assert_eq!(f.format(42069), "42.070");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_rounding(scaler::Rounding::Magnitude(2));
@@ -94,6 +106,7 @@ impl Formatter
     /// ```
     ///
     /// ## Significant Digits
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
@@ -101,35 +114,45 @@ impl Formatter
     /// assert_eq!(f.format(123.456), "0");
     /// assert_eq!(f.format(0.789), "0");
     /// assert_eq!(f.format(42069), "0");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_rounding(scaler::Rounding::SignificantDigits(1));
     /// assert_eq!(f.format(123.456), "100");
     /// assert_eq!(f.format(0.789), "0,8");
     /// assert_eq!(f.format(42069), "40.000");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_rounding(scaler::Rounding::SignificantDigits(2));
     /// assert_eq!(f.format(123.456), "120");
     /// assert_eq!(f.format(0.789), "0,79");
     /// assert_eq!(f.format(42069), "42.000");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_rounding(scaler::Rounding::SignificantDigits(3));
     /// assert_eq!(f.format(123.456), "123");
     /// assert_eq!(f.format(0.789), "0,789");
     /// assert_eq!(f.format(42069), "42.100");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_rounding(scaler::Rounding::SignificantDigits(4));
     /// assert_eq!(f.format(123.456), "123,5");
     /// assert_eq!(f.format(0.789), "0,7890");
     /// assert_eq!(f.format(42069), "42.070");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_rounding(scaler::Rounding::SignificantDigits(5));
@@ -168,6 +191,7 @@ impl Formatter
     ///
     /// # Examples
     /// ## Binary
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::Binary(true));
@@ -186,13 +210,16 @@ impl Formatter
     /// assert_eq!(f.format(2_f64.powi(70)), "1,000 Zi");
     /// assert_eq!(f.format(2_f64.powi(80)), "1,000 Yi");
     /// assert_eq!(f.format(2_f64.powi(90)), "1,000 * 2^(90)");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::Binary(false));
     /// assert_eq!(f.format(1024), "1,000Ki");
     /// ```
     ///
     /// ## Decimal
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::Decimal(true));
@@ -223,13 +250,16 @@ impl Formatter
     /// assert_eq!(f.format(1e27), "1,000 R");
     /// assert_eq!(f.format(1e30), "1,000 Q");
     /// assert_eq!(f.format(1e33), "1,000 * 10^(33)");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::Decimal(false));
     /// assert_eq!(f.format(1000), "1,000k");
     /// ```
     ///
     /// ## None
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None);
@@ -243,6 +273,7 @@ impl Formatter
     /// ```
     ///
     /// ## Scientific
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::Scientific);
@@ -270,6 +301,9 @@ impl Formatter
     /// - modified self
     ///
     /// # Examples
+    ///
+    /// Examples have scaling disabled for easier understanding.
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
@@ -279,7 +313,9 @@ impl Formatter
     /// assert_eq!(f.format(100), "100,0");
     /// assert_eq!(f.format(1000), "1.000");
     /// assert_eq!(f.format(10000), "10.000");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_separators("", ",");
@@ -288,7 +324,9 @@ impl Formatter
     /// assert_eq!(f.format(100), "100,0");
     /// assert_eq!(f.format(1000), "1000");
     /// assert_eq!(f.format(10000), "10000");
+    /// ```
     ///
+    /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::None)
     ///    .set_separators(",", ".");
@@ -359,6 +397,7 @@ impl Formatter
     ///
     /// # Examples
     /// ## Always
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_sign(scaler::Sign::Always);
@@ -370,6 +409,7 @@ impl Formatter
     /// ```
     ///
     /// ## OnlyMinus
+    ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_sign(scaler::Sign::OnlyMinus);
