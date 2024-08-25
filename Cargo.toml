@@ -7,9 +7,9 @@ exclude     = [".github/", "readme.pdf"]                                     # a
 keywords    = ["format", "numbers"]
 license     = "MIT"
 name        = "scaler"
-readme      = "readme.typ"
+readme      = "readme.md"
 repository  = "https://github.com/9-FS/scaler"
-version     = "1.0.2"
+version     = "1.0.3"
 
 [dependencies]
 log = "^0.4.0"
