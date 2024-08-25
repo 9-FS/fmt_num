@@ -57,63 +57,63 @@ impl Formatter
     /// # Examples
     /// ## Magnitude
     /// ```
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::Magnitude(-2));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::Magnitude(-2));
     /// assert_eq!(f.format(123.456), "123,46");
-    /// assert_eq!(f.format(0.789), "790 m");
-    /// assert_eq!(f.format(42069), "42,06900 k");
+    /// assert_eq!(f.format(0.789), "0,79");
+    /// assert_eq!(f.format(42069), "42.069,00");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::Magnitude(-1));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::Magnitude(-1));
     /// assert_eq!(f.format(123.456), "123,5");
-    /// assert_eq!(f.format(0.789), "800 m");
-    /// assert_eq!(f.format(42069), "42,0690 k");
+    /// assert_eq!(f.format(0.789), "0,8");
+    /// assert_eq!(f.format(42069), "42.069,0");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::Magnitude(0));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::Magnitude(0));
     /// assert_eq!(f.format(123.456), "123");
     /// assert_eq!(f.format(0.789), "1");
-    /// assert_eq!(f.format(42069), "42,069 k");
+    /// assert_eq!(f.format(42069), "42.069");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::Magnitude(1));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::Magnitude(1));
     /// assert_eq!(f.format(123.456), "120");
     /// assert_eq!(f.format(0.789), "0");
-    /// assert_eq!(f.format(42069), "42,07 k");
+    /// assert_eq!(f.format(42069), "42.070");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::Magnitude(2));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::Magnitude(2));
     /// assert_eq!(f.format(123.456), "100");
     /// assert_eq!(f.format(0.789), "0");
-    /// assert_eq!(f.format(42069), "42,1 k");
+    /// assert_eq!(f.format(42069), "42.100");
     /// ```
     ///
     /// ## Significant Digits
     /// ```
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::SignificantDigits(0));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::SignificantDigits(0));
     /// assert_eq!(f.format(123.456), "0");
     /// assert_eq!(f.format(0.789), "0");
     /// assert_eq!(f.format(42069), "0");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::SignificantDigits(1));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::SignificantDigits(1));
     /// assert_eq!(f.format(123.456), "100");
-    /// assert_eq!(f.format(0.789), "800 m");
-    /// assert_eq!(f.format(42069), "40 k");
+    /// assert_eq!(f.format(0.789), "0,8");
+    /// assert_eq!(f.format(42069), "40.000");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::SignificantDigits(2));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::SignificantDigits(2));
     /// assert_eq!(f.format(123.456), "120");
-    /// assert_eq!(f.format(0.789), "790 m");
-    /// assert_eq!(f.format(42069), "42 k");
+    /// assert_eq!(f.format(0.789), "0,79");
+    /// assert_eq!(f.format(42069), "42.000");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::SignificantDigits(3));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::SignificantDigits(3));
     /// assert_eq!(f.format(123.456), "123");
-    /// assert_eq!(f.format(0.789), "789 m");
-    /// assert_eq!(f.format(42069), "42,1 k");
+    /// assert_eq!(f.format(0.789), "0,789");
+    /// assert_eq!(f.format(42069), "42.100");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::SignificantDigits(4));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::SignificantDigits(4));
     /// assert_eq!(f.format(123.456), "123,5");
-    /// assert_eq!(f.format(0.789), "789,0 m");
-    /// assert_eq!(f.format(42069), "42,07 k");
+    /// assert_eq!(f.format(0.789), "0,7890");
+    /// assert_eq!(f.format(42069), "42.070");
     ///
-    /// let f: scaler::Formatter = scaler::Formatter::new().set_rounding(scaler::Rounding::SignificantDigits(5));
+    /// let f: scaler::Formatter = scaler::Formatter::new().set_scaling(scaler::Scaling::None).set_rounding(scaler::Rounding::SignificantDigits(5));
     /// assert_eq!(f.format(123.456), "123,46");
-    /// assert_eq!(f.format(0.789), "789,00 m");
-    /// assert_eq!(f.format(42069), "42,069 k");
+    /// assert_eq!(f.format(0.789), "0,78900");
+    /// assert_eq!(f.format(42069), "42.069");
     /// ```
     pub fn set_rounding(mut self, rounding: Rounding) -> Self
     {
