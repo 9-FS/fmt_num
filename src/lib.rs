@@ -338,43 +338,46 @@ impl Formatter
     /// ```
     pub fn set_separators(mut self, group_separator: &str, decimal_separator: &str) -> Self
     {
-        if decimal_separator == ""
+        #[cfg(feature = "warn_about_problematic_separators")] // warn if feature is enabled
         {
-            log::warn!("Decimal separator is empty. This may lead to ambiguous formatting.");
-        }
-        else if group_separator == decimal_separator
-        {
-            log::warn!(
-                "Group separator \"{}\" and decimal separator \"{}\" are the same. This may lead to ambiguous formatting.",
-                group_separator,
-                decimal_separator
-            );
-        }
-        else if group_separator.contains("0")
-            || group_separator.contains("1")
-            || group_separator.contains("2")
-            || group_separator.contains("3")
-            || group_separator.contains("4")
-            || group_separator.contains("5")
-            || group_separator.contains("6")
-            || group_separator.contains("7")
-            || group_separator.contains("8")
-            || group_separator.contains("9")
-        {
-            log::warn!("Group separator \"{}\" contains a digit. This may lead to ambiguous formatting.", group_separator);
-        }
-        else if decimal_separator.contains("0")
-            || decimal_separator.contains("1")
-            || decimal_separator.contains("2")
-            || decimal_separator.contains("3")
-            || decimal_separator.contains("4")
-            || decimal_separator.contains("5")
-            || decimal_separator.contains("6")
-            || decimal_separator.contains("7")
-            || decimal_separator.contains("8")
-            || decimal_separator.contains("9")
-        {
-            log::warn!("Decimal separator \"{}\" contains a digit. This may lead to ambiguous formatting.", decimal_separator);
+            if decimal_separator == ""
+            {
+                log::warn!("Decimal separator is empty. This may lead to ambiguous formatting.");
+            }
+            else if group_separator == decimal_separator
+            {
+                log::warn!(
+                    "Group separator \"{}\" and decimal separator \"{}\" are the same. This may lead to ambiguous formatting.",
+                    group_separator,
+                    decimal_separator
+                );
+            }
+            else if group_separator.contains("0")
+                || group_separator.contains("1")
+                || group_separator.contains("2")
+                || group_separator.contains("3")
+                || group_separator.contains("4")
+                || group_separator.contains("5")
+                || group_separator.contains("6")
+                || group_separator.contains("7")
+                || group_separator.contains("8")
+                || group_separator.contains("9")
+            {
+                log::warn!("Group separator \"{}\" contains a digit. This may lead to ambiguous formatting.", group_separator);
+            }
+            else if decimal_separator.contains("0")
+                || decimal_separator.contains("1")
+                || decimal_separator.contains("2")
+                || decimal_separator.contains("3")
+                || decimal_separator.contains("4")
+                || decimal_separator.contains("5")
+                || decimal_separator.contains("6")
+                || decimal_separator.contains("7")
+                || decimal_separator.contains("8")
+                || decimal_separator.contains("9")
+            {
+                log::warn!("Decimal separator \"{}\" contains a digit. This may lead to ambiguous formatting.", decimal_separator);
+            }
         }
 
         self.group_separator = group_separator.to_string();

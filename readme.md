@@ -8,6 +8,10 @@ Rounding can be done either to a specified magnitude or to a number of significa
 Separators can be freely adjusted. The group separator separates groups of digits every 3 digits before the decimal separator, while the decimal separator separates the integer and fractional parts of a number.\
 The sign behaviour can be set to always show the sign or only show the sign when the number is negative.
 
+## Installation
+
+The feature `warn_about_problematic_separators` warns using `log::warn!` if separators are being set with `Formatter::set_separators` that could lead to ambiguous formatting. It depends on the [`log`](https://crates.io/crates/log) crate and is the only dependency. If a dependencyless build should be desired, it can be disabled by specifying `default-features = false` in your Cargo.toml entry.
+
 ## Usage
 
 1. Execute `Formatter::new` to create a new `Formatter` with default settings.
