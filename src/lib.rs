@@ -17,13 +17,14 @@ pub struct Formatter
     rounding:          Rounding,
     scaling:           Scaling,
     sign:              Sign,
+    trailing_zeros:    bool,
 }
 
 
 impl Formatter
 {
     /// # Summary
-    /// Constructs default Formatter with only sign when negative, decimal scaling, rounding to 4 significant digits, "." as thousand separator, and "," as decimal separator.
+    /// Constructs default Formatter with only sign when negative, decimal scaling, rounding to 4 significant digits, "." as thousand separator, "," as decimal separator, and trailing zeros enabled.
     ///
     /// # Returns
     /// - Formatter
@@ -35,6 +36,7 @@ impl Formatter
             rounding:          Rounding::SignificantDigits(4),
             scaling:           Scaling::Decimal(true),
             sign:              Sign::OnlyMinus,
+            trailing_zeros:    true,
         };
     }
 
@@ -214,6 +216,26 @@ impl Formatter
     ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///    .set_scaling(scaler::Scaling::Binary(true));
+    /// assert_eq!(f.format(-0.5), "-1,000 * 2^(-1)");
+    /// assert_eq!(f.format(-1), "-1,000");
+    /// assert_eq!(f.format(-64), "-64,00");
+    /// assert_eq!(f.format(-128), "-128,0");
+    /// assert_eq!(f.format(-1023), "-1.023");
+    /// assert_eq!(f.format(-1024), "-1,000 Ki");
+    /// assert_eq!(f.format(-2_f64.powi(10)), "-1,000 Ki");
+    /// assert_eq!(f.format(-2_f64.powi(20)), "-1,000 Mi");
+    /// assert_eq!(f.format(-2_f64.powi(30)), "-1,000 Gi");
+    /// assert_eq!(f.format(-2_f64.powi(40)), "-1,000 Ti");
+    /// assert_eq!(f.format(-2_f64.powi(50)), "-1,000 Pi");
+    /// assert_eq!(f.format(-2_f64.powi(60)), "-1,000 Ei");
+    /// assert_eq!(f.format(-2_f64.powi(70)), "-1,000 Zi");
+    /// assert_eq!(f.format(-2_f64.powi(80)), "-1,000 Yi");
+    /// assert_eq!(f.format(-2_f64.powi(90)), "-1,000 * 2^(90)");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::Binary(false));
     /// assert_eq!(f.format(1024), "1,000Ki");
     /// ```
@@ -254,6 +276,38 @@ impl Formatter
     ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///    .set_scaling(scaler::Scaling::Decimal(true));
+    /// assert_eq!(f.format(-1e-31), "-1,000 * 10^(-31)");
+    /// assert_eq!(f.format(-1e-30), "-1,000 q");
+    /// assert_eq!(f.format(-1e-27), "-1,000 r");
+    /// assert_eq!(f.format(-1e-24), "-1,000 y");
+    /// assert_eq!(f.format(-1e-21), "-1,000 z");
+    /// assert_eq!(f.format(-1e-18), "-1,000 a");
+    /// assert_eq!(f.format(-1e-15), "-1,000 f");
+    /// assert_eq!(f.format(-1e-12), "-1,000 p");
+    /// assert_eq!(f.format(-1e-9), "-1,000 n");
+    /// assert_eq!(f.format(-1e-6), "-1,000 µ");
+    /// assert_eq!(f.format(-1e-3), "-1,000 m");
+    /// assert_eq!(f.format(-1), "-1,000");
+    /// assert_eq!(f.format(-10), "-10,00");
+    /// assert_eq!(f.format(-100), "-100,0");
+    /// assert_eq!(f.format(-999), "-999,0");
+    /// assert_eq!(f.format(-1000), "-1,000 k");
+    /// assert_eq!(f.format(-1e3), "-1,000 k");
+    /// assert_eq!(f.format(-1e6), "-1,000 M");
+    /// assert_eq!(f.format(-1e9), "-1,000 G");
+    /// assert_eq!(f.format(-1e12), "-1,000 T");
+    /// assert_eq!(f.format(-1e15), "-1,000 P");
+    /// assert_eq!(f.format(-1e18), "-1,000 E");
+    /// assert_eq!(f.format(-1e21), "-1,000 Z");
+    /// assert_eq!(f.format(-1e24), "-1,000 Y");
+    /// assert_eq!(f.format(-1e27), "-1,000 R");
+    /// assert_eq!(f.format(-1e30), "-1,000 Q");
+    /// assert_eq!(f.format(-1e33), "-1,000 * 10^(33)");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::Decimal(false));
     /// assert_eq!(f.format(1000), "1,000k");
     /// ```
@@ -272,14 +326,38 @@ impl Formatter
     /// assert_eq!(f.format(1e10), "10.000.000.000");
     /// ```
     ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///    .set_scaling(scaler::Scaling::None);
+    /// assert_eq!(f.format(-1e-10), "-0,0000000001000");
+    /// assert_eq!(f.format(-0.1), "-0,1000");
+    /// assert_eq!(f.format(-1), "-1,000");
+    /// assert_eq!(f.format(-10), "-10,00");
+    /// assert_eq!(f.format(-100), "-100,0");
+    /// assert_eq!(f.format(-1000), "-1.000");
+    /// assert_eq!(f.format(-1e10), "-10.000.000.000");
+    /// ```
+    ///
     /// ## Scientific
     ///
     /// ```
     /// let f: scaler::Formatter = scaler::Formatter::new()
     ///    .set_scaling(scaler::Scaling::Scientific);
+    /// assert_eq!(f.format(0.01), "1,000 * 10^(-2)");
     /// assert_eq!(f.format(0.1), "1,000 * 10^(-1)");
     /// assert_eq!(f.format(1), "1,000 * 10^(0)");
     /// assert_eq!(f.format(10), "1,000 * 10^(1)");
+    /// assert_eq!(f.format(100), "1,000 * 10^(2)");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///    .set_scaling(scaler::Scaling::Scientific);
+    /// assert_eq!(f.format(-0.01), "-1,000 * 10^(-2)");
+    /// assert_eq!(f.format(-0.1), "-1,000 * 10^(-1)");
+    /// assert_eq!(f.format(-1), "-1,000 * 10^(0)");
+    /// assert_eq!(f.format(-10), "-1,000 * 10^(1)");
+    /// assert_eq!(f.format(-100), "-1,000 * 10^(2)");
     /// ```
     pub fn set_scaling(mut self, scaling: Scaling) -> Self
     {
@@ -425,6 +503,114 @@ impl Formatter
     pub fn set_sign(mut self, sign: Sign) -> Self
     {
         self.sign = sign;
+        return self;
+    }
+
+
+    /// # Summary
+    /// Sets whether or not to display trailing zeros.
+    ///
+    /// # Arguments
+    /// - `trailing_zeros`: whether or not to display trailing zeros
+    ///
+    /// # Returns
+    /// - modified self
+    ///
+    /// # Examples
+    /// ## true
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///     .set_scaling(scaler::Scaling::Binary(true))
+    ///     .set_trailing_zeros(true);
+    /// assert_eq!(f.format(1), "1,000");
+    /// assert_eq!(f.format(1.2), "1,200");
+    /// assert_eq!(f.format(1.23), "1,230");
+    /// assert_eq!(f.format(1.234), "1,234");
+    /// assert_eq!(f.format(1.2345), "1,234");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///     .set_scaling(scaler::Scaling::Decimal(true))
+    ///     .set_trailing_zeros(true);
+    /// assert_eq!(f.format(1), "1,000");
+    /// assert_eq!(f.format(1.2), "1,200");
+    /// assert_eq!(f.format(1.23), "1,230");
+    /// assert_eq!(f.format(1.234), "1,234");
+    /// assert_eq!(f.format(1.2345), "1,234");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///     .set_scaling(scaler::Scaling::None)
+    ///     .set_trailing_zeros(true);
+    /// assert_eq!(f.format(1), "1,000");
+    /// assert_eq!(f.format(1.2), "1,200");
+    /// assert_eq!(f.format(1.23), "1,230");
+    /// assert_eq!(f.format(1.234), "1,234");
+    /// assert_eq!(f.format(1.2345), "1,234");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///     .set_scaling(scaler::Scaling::Scientific)
+    ///     .set_trailing_zeros(true);
+    /// assert_eq!(f.format(1), "1,000 * 10^(0)");
+    /// assert_eq!(f.format(1.2), "1,200 * 10^(0)");
+    /// assert_eq!(f.format(1.23), "1,230 * 10^(0)");
+    /// assert_eq!(f.format(1.234), "1,234 * 10^(0)");
+    /// assert_eq!(f.format(1.2345), "1,234 * 10^(0)");
+    /// ```
+    ///
+    /// ## false
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///     .set_scaling(scaler::Scaling::Binary(true))
+    ///     .set_trailing_zeros(false);
+    /// assert_eq!(f.format(1), "1");
+    /// assert_eq!(f.format(1.2), "1,2");
+    /// assert_eq!(f.format(1.23), "1,23");
+    /// assert_eq!(f.format(1.234), "1,234");
+    /// assert_eq!(f.format(1.2345), "1,234");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///     .set_scaling(scaler::Scaling::Decimal(true))
+    ///     .set_trailing_zeros(false);
+    /// assert_eq!(f.format(1), "1");
+    /// assert_eq!(f.format(1.2), "1,2");
+    /// assert_eq!(f.format(1.23), "1,23");
+    /// assert_eq!(f.format(1.234), "1,234");
+    /// assert_eq!(f.format(1.2345), "1,234");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///     .set_scaling(scaler::Scaling::None)
+    ///     .set_trailing_zeros(false);
+    /// assert_eq!(f.format(1), "1");
+    /// assert_eq!(f.format(1.2), "1,2");
+    /// assert_eq!(f.format(1.23), "1,23");
+    /// assert_eq!(f.format(1.234), "1,234");
+    /// assert_eq!(f.format(1.2345), "1,234");
+    /// ```
+    ///
+    /// ```
+    /// let f: scaler::Formatter = scaler::Formatter::new()
+    ///     .set_scaling(scaler::Scaling::Scientific)
+    ///     .set_trailing_zeros(false);
+    /// assert_eq!(f.format(1), "1 * 10^(0)");
+    /// assert_eq!(f.format(1.2), "1,2 * 10^(0)");
+    /// assert_eq!(f.format(1.23), "1,23 * 10^(0)");
+    /// assert_eq!(f.format(1.234), "1,234 * 10^(0)");
+    /// assert_eq!(f.format(1.2345), "1,234 * 10^(0)");
+    /// ```
+    pub fn set_trailing_zeros(mut self, trailing_zeros: bool) -> Self
+    {
+        self.trailing_zeros = trailing_zeros;
         return self;
     }
 }

@@ -184,38 +184,59 @@ impl Formatter
             dec_places = 0; // negative number of decimal places are not allowed
         }
 
-        match self.scaling //  apply magnitude shift for scaling, f64 -> String, append unit prefix
+        match self.scaling //  apply magnitude shift for scaling, f64 -> String, optionally remove trailing zeros, append unit prefix
         {
-            Scaling::None => {s = format!("{:.*}", dec_places as usize, x);} // no scaling
-            Scaling::Binary(whitespace_separation) =>
+            Scaling::None => // no scaling
+            {
+                s = format!("{:.*}", dec_places as usize, x);
+                if !self.trailing_zeros {s = s.trim_end_matches("0").trim_end_matches(".").to_string();} // remove trailing zeros and bare decimal separator
+            }
+            Scaling::Binary(whitespace_separation) => // binary scaling
             {
                 match BINARY_PREFIXES.iter().find(|(lower, upper, _prefix)| *lower as f64 <= magnitude && magnitude < *upper as f64) // try to find binary unit prefix for magnitude
                 {
                     Some((_lower, _upper, prefix)) =>
                     {
                         s = format!("{:.*}", dec_places as usize, x / 2.0_f64.powf(magnitude - magnitude.rem_euclid(10.0))); // divide by 2^magnitude
+                        if !self.trailing_zeros {s = s.trim_end_matches("0").trim_end_matches(".").to_string();} // remove trailing zeros and bare decimal separator
                         if whitespace_separation {s += " ";} // add whitespace between number and unit prefix
                         s += prefix; // append binary unit prefix
                         s = s.trim_end().to_string(); // remove possible trailing whitespace
                     },
-                    None => {s = format!("{:.*} * 2^({})", dec_places as usize, x / 2.0_f64.powf(x.log2().floor()), x.log2().floor())} // fallback to base 2 scientific notation
+                    None => // fallback to base 2 scientific notation
+                    {
+                        s = format!("{:.*}", dec_places as usize, x / 2.0_f64.powf(magnitude.floor())); // divide by 2^magnitude
+                        if !self.trailing_zeros {s = s.trim_end_matches("0").trim_end_matches(".").to_string();} // remove trailing zeros and bare decimal separator
+                        s += format!(" * 2^({})", magnitude.floor()).as_str();  // append base 2 multiplier
+                    }
                 }
             }
-            Scaling::Decimal(whitespace_separation) =>
+            Scaling::Decimal(whitespace_separation) => // decimal scaling
             {
                 match DECIMAL_PREFIXES.iter().find(|(lower, upper, _prefix)| *lower as f64 <= magnitude && magnitude < *upper as f64) // try to find decimal unit prefix for magnitude
                 {
                     Some((_lower, _upper, prefix)) =>
                     {
                         s = format!("{:.*}", dec_places as usize, x / 10.0_f64.powf(magnitude - magnitude.rem_euclid(3.0))); // divide by 10^magnitude
+                        if !self.trailing_zeros {s = s.trim_end_matches("0").trim_end_matches(".").to_string();} // remove trailing zeros and bare decimal separator
                         if whitespace_separation {s += " ";} // add whitespace between number and unit prefix
                         s += prefix; // append decimal unit prefix
                         s = s.trim_end().to_string(); // remove possible trailing whitespace
                     },
-                    None => {s = format!("{:.*} * 10^({})", dec_places as usize, x / 10.0_f64.powf(x.log10().floor()), x.log10().floor())} // fallback to base 10 scientific notation
+                    None => // fallback to base 10 scientific notation
+                    {
+                        s = format!("{:.*}", dec_places as usize, x / 10.0_f64.powf(magnitude.floor())); // divide by 10^magnitude
+                        if !self.trailing_zeros {s = s.trim_end_matches("0").trim_end_matches(".").to_string();} // remove trailing zeros and bare decimal separator
+                        s += format!(" * 10^({})", magnitude.floor()).as_str(); // append base 10 multiplier
+                    }
                 }
             }
-            Scaling::Scientific => {s = format!("{:.*} * 10^({})", dec_places as usize, x / 10.0_f64.powf(x.log10().floor()), x.log10().floor());} // scientific notation
+            Scaling::Scientific => // scientific notation
+            {
+                s = format!("{:.*}", dec_places as usize, x / 10.0_f64.powf(magnitude.floor())); // divide by 10^magnitude
+                if !self.trailing_zeros {s = s.trim_end_matches("0").trim_end_matches(".").to_string();} // remove trailing zeros and bare decimal separator
+                s += format!(" * 10^({})", magnitude.floor()).as_str(); // append base 10 multiplier
+            }
         }
 
         if self.sign == Sign::Always && x.is_sign_positive()
@@ -234,13 +255,9 @@ impl Formatter
                 + 1; // earliest possible index of group separator, find first digit
             let mut i: usize = s
                 .find(".") // find default decimal separator
-                .unwrap_or_else(|| {
-                    s.chars()
-                        .rev()
-                        .position(|c| c.is_digit(10))
-                        .map(|pos| s.len() - pos)
-                        .expect(format!("Could not find last digit in `s` = \"{s}\", formerly `x` = \"{x}\".").as_str())
-                }); // if none assume no decimal separator and start at last digit
+                .or_else(|| s.find("*")) // if none assume single digit scientific notation and start at space before multiplication sign, will result in no group separators
+                .or_else(|| s.chars().rev().position(|c| c.is_digit(10)).map(|pos| s.len() - pos)) // if none assume no decimal separator and no scientific notation and start at last digit
+                .expect(format!("Could not find last digit in `s` = \"{s}\", formerly `x` = \"{x}\".").as_str());
 
             while group_separator_i_earliest + 3 <= i
             // insert group separators
@@ -255,6 +272,3 @@ impl Formatter
         return s;
     }
 }
-
-
-// TODO sign handling, separators, scaling, scientific notation, prefix handling,

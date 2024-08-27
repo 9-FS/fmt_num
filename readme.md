@@ -6,7 +6,8 @@ This crate provides a convenient `Formatter` to scale, round, and display number
 Scaling describes the usage of [decimal / metric / SI unit prefixes](https://en.wikipedia.org/wiki/Metric_prefix) or [binary / IEC unit prefixes](https://en.wikipedia.org/wiki/Binary_prefix) to increase readability; though no scaling and scientific notation are also supported.\
 Rounding can be done either to a specified magnitude or to a number of significant digits.\
 Separators can be freely adjusted. The group separator separates groups of digits every 3 digits before the decimal separator, while the decimal separator separates the integer and fractional parts of a number.\
-The sign behaviour can be set to only show the sign when the number is negative ("-"), which is the default, or always show the sign ("+" and "-"). The latter can be useful for highlighting differences.
+The sign behaviour can be set to only show the sign when the number is negative ("-"), which is the default, or always show the sign ("+" and "-"). The latter can be useful for highlighting differences. \
+By default rounding can create trailing zeros. They can optionally be removed.
 
 ## Installation
 
@@ -301,3 +302,27 @@ assert_eq!(f.format(10000), "10,000");
     assert_eq!(f.format(1), "1,000");
     assert_eq!(f.format(std::f64::INFINITY), "∞");
     ```
+
+### Trailing Zeros
+
+- `true`
+   ```Rust
+   let f: scaler::Formatter = scaler::Formatter::new()
+      .set_trailing_zeros(true);
+   assert_eq!(f.format(1), "1,000");
+   assert_eq!(f.format(1.2), "1,200");
+   assert_eq!(f.format(1.23), "1,230");
+   assert_eq!(f.format(1.234), "1,234");
+   assert_eq!(f.format(1.2345), "1,234");
+   ```
+
+- `false`
+   ```Rust
+   let f: scaler::Formatter = scaler::Formatter::new()
+      .set_trailing_zeros(false);
+   assert_eq!(f.format(1), "1");
+   assert_eq!(f.format(1.2), "1,2");
+   assert_eq!(f.format(1.23), "1,23");
+   assert_eq!(f.format(1.234), "1,234");
+   assert_eq!(f.format(1.2345), "1,234");
+   ```
