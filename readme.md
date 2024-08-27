@@ -3,10 +3,10 @@
 
 This crate provides a convenient `Formatter` to scale, round, and display numbers.
 
-Scaling describes the usage of [decimal]("https://en.wikipedia.org/wiki/Metric_prefix") or [binary unit prefixes]("https://en.wikipedia.org/wiki/Binary_prefix") to increase readability; though no scaling and scientific notation are also supported.\
+Scaling describes the usage of [decimal / metric / SI unit prefixes](https://en.wikipedia.org/wiki/Metric_prefix) or [binary / IEC unit prefixes](https://en.wikipedia.org/wiki/Binary_prefix) to increase readability; though no scaling and scientific notation are also supported.\
 Rounding can be done either to a specified magnitude or to a number of significant digits.\
 Separators can be freely adjusted. The group separator separates groups of digits every 3 digits before the decimal separator, while the decimal separator separates the integer and fractional parts of a number.\
-The sign behaviour can be set to always show the sign or only show the sign when the number is negative.
+The sign behaviour can be set to only show the sign when the number is negative ("-"), which is the default, or always show the sign ("+" and "-"). The latter can be useful for highlighting differences.
 
 ## Installation
 
