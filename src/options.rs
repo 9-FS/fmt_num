@@ -1,7 +1,7 @@
 // Copyright (c) 2024 구FS, all rights reserved. Subject to the MIT licence in `licence.md`.
 
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Rounding
 {
     Magnitude(i16),        // round statically to digit at 10^n, contains precision n
@@ -9,7 +9,7 @@ pub enum Rounding
 }
 
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Scaling
 {
     Binary(bool),  // scaling by 2^10 = 1.024 until no more prefixes, then fallback to scientific notation, contains whether or not to put space between number and unit prefix
@@ -19,7 +19,7 @@ pub enum Scaling
 }
 
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Sign
 {
     Always,    // always show sign

@@ -9,7 +9,7 @@ pub use round::*;
 
 /// # Summary
 /// A convenient formatter to scale, round, and display numbers. More information about available options and can be found at the setter functions and the format function itself.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Formatter
 {
     decimal_separator: String,
